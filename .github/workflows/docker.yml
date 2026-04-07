@@ -8,6 +8,10 @@ jobs:
   docker:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -15,7 +19,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build image
-        run: docker build -t ghcr.io/${{ github.repository }}/sales-aggregator:latest .
+        run: docker build -t ghcr.io/leonardo672/sales-aggregator:latest .
 
       - name: Push image
-        run: docker push ghcr.io/${{ github.repository }}/sales-aggregator:latest
+        run: docker push ghcr.io/leonardo672/sales-aggregator:latest

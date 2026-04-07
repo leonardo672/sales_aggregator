@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# FastAPI / Uvicorn
+*.log
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# SQLite database (if you add later)
+*.db
+*.sqlite3
+
+# mypy
+.mypy_cache/
+
+# Ruff / lint
+.ruff_cache/
+
+# coverage
+coverage.xml
+
+# temporary files
+*.tmp
+*.temp
+
+# CSV test artifacts (optional)
+# comment if you want commit sample csv
+# *.csv

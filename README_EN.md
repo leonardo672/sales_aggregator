@@ -42,6 +42,7 @@ sales_aggregator/
 ├── tests/
 │   ├── test_endpoints.py    # pytest tests for main endpoints
 │   └── sample_data.csv      # Sample CSV for testing upload
+├── sales-aggregator-api-tests.zip  # ZIP file containing additional test files
 ├── .github/
 │   └── workflows/
 │       └── docker.yml       # GitHub Actions CI/CD workflow for building and pushing Docker

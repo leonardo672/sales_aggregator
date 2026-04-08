@@ -27,19 +27,29 @@ pip install -r requirements.txt
 
 ```
 sales_aggregator/
-├── main.py              # Точка входа FastAPI
+├── main.py                  # Точка входа в приложение FastAPI
 ├── models/
-│   ├── sale.py          # Модели продаж Pydantic
-│   └── analytics.py     # Модели ответов аналитики Pydantic
+│   ├── sale.py              # Pydantic модели для продаж
+│   └── analytics.py         # Pydantic модели для ответов аналитики
 ├── routers/
-│   ├── sales.py         # CRUD эндпоинты для продаж
-│   └── analytics.py     # Эндпоинты аналитики
+│   ├── sales.py             # CRUD endpoints для /sales
+│   └── analytics.py         # Endpoints аналитики: сводка, топ-продукты, загрузка CSV, конвертация USD
 ├── services/
-│   ├── storage.py       # Хранение в памяти / SQLite
-│   ├── aggregation.py   # Логика агрегирования с Pandas
-│   └── currency.py      # Интеграция с API валют
-├── requirements.txt
-└── README.md            # Этот файл
+│   ├── storage.py           # Хранилище продаж в памяти или SQLite
+│   ├── aggregation.py       # Логика сводки и топ-продуктов (с использованием Pandas)
+│   ├── currency.py          # Получение и кэширование курса USD/RUB
+│   └── logging.py           # Структурированный лог (JSON формат)
+├── tests/
+│   ├── test_endpoints.py    # Тесты pytest для основных endpoints
+│   └── sample_data.csv      # Пример CSV файла для тестирования загрузки
+├── sales-aggregator-api-tests.zip  # ZIP файл с дополнительными тестами
+├── .github/
+│   └── workflows/
+│       └── docker.yml       # GitHub Actions CI/CD workflow для сборки и публикации Docker
+├── Dockerfile               # Определение Docker контейнера
+├── requirements.txt         # Зависимости Python
+├── README.md                # Инструкции по запуску, детали API
+└── .gitignore               # Игнорирование venv, __pycache__, логов и др.
 ```
 
 ---

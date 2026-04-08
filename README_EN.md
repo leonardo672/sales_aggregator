@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a mini-service REST API for uploading, storing, and aggregating marketplace sales data. It supports CSV uploads, analytics, and currency conversion.
+This is a mini REST API service for uploading, storing, and aggregating sales data from marketplaces. It supports CSV uploads, analytics, and currency conversion.
 
 ---
 
@@ -36,13 +36,13 @@ sales_aggregator/
 │   └── analytics.py         # Analytics endpoints: summary, top-products, CSV upload, USD conversion
 ├── services/
 │   ├── storage.py           # In-memory or SQLite storage for sales
-│   ├── aggregation.py       # Logic for summary, top-products (using Pandas)
+│   ├── aggregation.py       # Logic for summary and top-products (using Pandas)
 │   ├── currency.py          # Fetch and cache USD/RUB rate
 │   └── logging.py           # Structured logging (JSON format)
 ├── tests/
 │   ├── test_endpoints.py    # pytest tests for main endpoints
 │   └── sample_data.csv      # Sample CSV for testing upload
-├── sales-aggregator-api-tests.zip  # ZIP file containing additional test files
+├── sales-aggregator-api-tests.zip  # ZIP file containing additional tests
 ├── .github/
 │   └── workflows/
 │       └── docker.yml       # GitHub Actions CI/CD workflow for building and pushing Docker
@@ -56,13 +56,31 @@ sales_aggregator/
 
 ## Running the Service
 
-Start FastAPI server:
+### Local Python Run
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Server runs at `http://localhost:8000`.
+The server will be available at `http://localhost:8000`.
+
+---
+
+### Running via Docker
+
+Build the image:
+
+```bash
+docker build -t sales-aggregator .
+```
+
+Run the container:
+
+```bash
+docker run -p 8000:8000 sales-aggregator
+```
+
+The service will be available at `http://localhost:8000`.
 
 ---
 
@@ -72,34 +90,34 @@ Server runs at `http://localhost:8000`.
 
 #### POST /sales
 
-* Add one or more sales.
+* Add one or multiple sales.
 * Request body: list of sales.
 * Returns: number of added records.
 
 #### GET /sales
 
-* Retrieve sales.
-* Optional query params: `marketplace`, `status`, `date_from`, `date_to`, `page`, `page_size`.
+* Retrieve a list of sales.
+* Optional query parameters: `marketplace`, `status`, `date_from`, `date_to`, `page`, `page_size`.
 
 ### Analytics
 
 #### GET /analytics/summary
 
 * Aggregated metrics.
-* Required query params: `date_from`, `date_to`.
+* Required: `date_from`, `date_to`.
 * Optional: `marketplace`, `group_by` (`marketplace` | `date` | `status`).
 
 #### GET /analytics/top-products
 
-* Top products for a period.
+* Top products for a given period.
 * Required: `date_from`, `date_to`.
 * Optional: `sort_by` (`revenue` | `quantity` | `profit`, default=`revenue`), `limit` (default=10).
 
 #### GET /analytics/summary-usd
 
 * Same as `/summary` but converted to USD.
-* Uses open API from Central Bank of Russia: `https://www.cbr-xml-daily.ru/daily_json.js`
-* Caches rate for 1 hour.
+* Uses the Central Bank of Russia API: `https://www.cbr-xml-daily.ru/daily_json.js`
+* Caches exchange rate for 1 hour.
 
 #### POST /analytics/upload-csv
 
@@ -108,7 +126,7 @@ Server runs at `http://localhost:8000`.
 
 ---
 
-## Example CSV
+## CSV Example
 
 ```
 order_id,marketplace,product_name,quantity,price,cost_price,status,sold_at
@@ -121,15 +139,15 @@ ORD-001,ozon,Cable USB-C,3,450.00,120.00,delivered,2025-03-01
 ## Notes
 
 * Ensure `sold_at` dates are not in the future.
-* Valid `marketplace`: `ozon`, `wildberries`, `yandex_market`.
+* Supported `marketplace`: `ozon`, `wildberries`, `yandex_market`.
 * `price`, `cost_price` > 0; `quantity` >= 1.
-* Returned or cancelled orders are handled in analytics accordingly.
-* In-memory storage resets on server restart unless SQLite is enabled.
+* Returned or canceled orders are considered correctly in analytics.
+* In-memory storage is cleared on server restart if SQLite is not enabled.
 
 ---
 
-## Testing Endpoints
+## Endpoint Testing
 
 * Use Postman or any HTTP client.
-* Example: Upload CSV → Check `/sales` → `/analytics/summary` → `/analytics/top-products` → `/analytics/summary-usd`.
+* Example flow: Upload CSV → Check `/sales` → `/analytics/summary` → `/analytics/top-products` → `/analytics/summary-usd`.
 * Filter, sort, and paginate using query parameters as described above.

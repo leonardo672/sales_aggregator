@@ -56,13 +56,31 @@ sales_aggregator/
 
 ## Запуск сервиса
 
-Запуск FastAPI сервера:
+### Локальный запуск через Python
 
 ```bash
 uvicorn main:app --reload
 ```
 
 Сервер будет доступен по адресу `http://localhost:8000`.
+
+---
+
+### Запуск через Docker
+
+Сборка образа:
+
+```bash
+docker build -t sales-aggregator .
+```
+
+Запуск контейнера:
+
+```bash
+docker run -p 8000:8000 sales-aggregator
+```
+
+Сервис будет доступен по адресу `http://localhost:8000`.
 
 ---
 

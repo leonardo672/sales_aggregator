@@ -13,13 +13,17 @@ router = APIRouter(prefix="/analytics", tags=["Analytics"])
 logger = logging.getLogger(__name__)
 
 
-@router.get("/summary")
+@router.get("/summary", summary="Get aggregated sales summary")
 def get_summary(
     date_from: date,
     date_to: date,
     marketplace: str | None = None,
     group_by: str | None = None
 ):
+    """
+    Returns aggregated sales metrics for the given date range, optionally filtered by marketplace
+    and grouped by a field.
+    """
     logger.info(
         "Summary request started",
         extra={"date_from": str(date_from), "date_to": str(date_to), "marketplace": marketplace, "group_by": group_by}
@@ -34,20 +38,23 @@ def get_summary(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/summary-usd")
+@router.get("/summary-usd", summary="Get aggregated sales summary in USD")
 def summary_usd(
     date_from: date,
     date_to: date,
     marketplace: str | None = None,
     group_by: str | None = None
 ):
+    """
+    Returns aggregated sales metrics converted to USD using current exchange rate.
+    """
     logger.info(
         "Summary USD request started",
         extra={"date_from": str(date_from), "date_to": str(date_to), "marketplace": marketplace, "group_by": group_by}
     )
     try:
         rate = get_usd_rate()
-    except Exception as e:
+    except Exception:
         logger.error("Currency API unavailable", exc_info=True)
         raise HTTPException(503, "Currency API unavailable")
 
@@ -65,13 +72,16 @@ def summary_usd(
         raise HTTPException(500, str(e))
 
 
-@router.get("/top-products")
+@router.get("/top-products", summary="Get top-selling products")
 def top(
     date_from: date,
     date_to: date,
     sort_by: Literal["revenue", "quantity", "profit"] = Query("revenue"),
     limit: int = Query(10, ge=1, le=100)
 ):
+    """
+    Returns top products by revenue, quantity, or profit within a date range.
+    """
     logger.info(
         "Top products request started",
         extra={"date_from": str(date_from), "date_to": str(date_to), "sort_by": sort_by, "limit": limit}
@@ -85,8 +95,12 @@ def top(
         raise HTTPException(500, str(e))
 
 
-@router.post("/upload-csv")
+@router.post("/upload-csv", summary="Upload sales CSV or Excel file")
 async def upload_csv(file: UploadFile):
+    """
+    Uploads a CSV or Excel file of sales. Supports .csv (UTF-8 or CP1251) and .xlsx.
+    Returns number of loaded rows and any validation errors.
+    """
     logger.info("CSV upload started", extra={"file_name": file.filename})
 
     try:

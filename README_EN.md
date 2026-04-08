@@ -27,19 +27,28 @@ pip install -r requirements.txt
 
 ```
 sales_aggregator/
-├── main.py              # FastAPI entry point
+├── main.py                  # Entry point of FastAPI app
 ├── models/
-│   ├── sale.py          # Pydantic sale models
-│   └── analytics.py     # Pydantic analytics response models
+│   ├── sale.py              # Pydantic models for Sale
+│   └── analytics.py         # Pydantic models for analytics responses
 ├── routers/
-│   ├── sales.py         # CRUD endpoints for sales
-│   └── analytics.py     # Analytics endpoints
+│   ├── sales.py             # CRUD endpoints for /sales
+│   └── analytics.py         # Analytics endpoints: summary, top-products, CSV upload, USD conversion
 ├── services/
-│   ├── storage.py       # In-memory / SQLite storage
-│   ├── aggregation.py   # Aggregation logic with Pandas
-│   └── currency.py      # Currency API integration
-├── requirements.txt
-└── README.md            # This file
+│   ├── storage.py           # In-memory or SQLite storage for sales
+│   ├── aggregation.py       # Logic for summary, top-products (using Pandas)
+│   ├── currency.py          # Fetch and cache USD/RUB rate
+│   └── logging.py           # Structured logging (JSON format)
+├── tests/
+│   ├── test_endpoints.py    # pytest tests for main endpoints
+│   └── sample_data.csv      # Sample CSV for testing upload
+├── .github/
+│   └── workflows/
+│       └── docker.yml       # GitHub Actions CI/CD workflow for building and pushing Docker
+├── Dockerfile               # Docker container definition
+├── requirements.txt         # Python dependencies
+├── README.md                # Run instructions, API details
+└── .gitignore               # Ignore venv, __pycache__, logs, etc.
 ```
 
 ---
